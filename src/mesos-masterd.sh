@@ -51,7 +51,7 @@ done
 PRGDIR=`dirname "$PRG"`
 
 # Establish which Command we are going to run.
-mesosd=`which mesos-master`
+mesos_wrapper="`which mesos-init-wrapper`"
 if [ ! -n "$mesosd" ]; then
    echo $"ERROR: It appears that the file $mesosd is unreachable or unexecutable."
    exit -1
@@ -73,7 +73,7 @@ function start()
     echo -n $"Starting Mesos Master ($mesosd):"
 
     if [[ $do_daemonize -eq 1 ]]; then
-      daemonize -a -e "$OUT_FILE" -o "$OUT_FILE" -p "$PIDFILE" -l "$LOCKFILE" -u "$MESOS_USER" $NUMACTL $mesosd $OPTIONS
+      daemonize -a -e "$OUT_FILE" -o "$OUT_FILE" -p "$PIDFILE" -l "$LOCKFILE" -u "$MESOS_USER" $NUMACTL "$mesos_wrapper" master $OPTIONS
       
       RETVAL=$?
       if [ $RETVAL -eq 0 ]; then
